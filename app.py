@@ -8,7 +8,7 @@ app = Flask(__name__)
 # -----------------------------
 # CORS configuration
 # -----------------------------
-FRONTEND_URL = os.environ.get("FRONTEND_URL", "*")  # Set this on Render to your Netlify URL
+FRONTEND_URL = os.environ.get("https://portfolio-sigma-ecru-rijposmiqw.vercel.app/", "*")  # Set this on Render to your Netlify URL
 CORS(app, origins=FRONTEND_URL)
 
 # -----------------------------
