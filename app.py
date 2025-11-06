@@ -1,3 +1,4 @@
+# refreshed
 from flask import Flask, request, jsonify
 from flask_mail import Mail, Message
 from flask_cors import CORS
@@ -50,3 +51,4 @@ def contact():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
