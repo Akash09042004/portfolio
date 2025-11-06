@@ -40,7 +40,7 @@ contactMeBtn.onclick = () => {
     });
 
     // -----------------------------
-    // Send contact form data
+    // Send contact form data to Render backend
     // -----------------------------
     const name = document.querySelector('#name').value;
     const email = document.querySelector('#email').value;
@@ -51,6 +51,7 @@ contactMeBtn.onclick = () => {
         return;
     }
 
+    // Your Render backend URL
     const backendURL = "https://portfolio-gqwn.onrender.com/contact";
 
     fetch(backendURL, {
@@ -64,7 +65,7 @@ contactMeBtn.onclick = () => {
         document.querySelector('#contact-form').reset();
     })
     .catch(err => {
-        console.error(err);
+        console.error("Error sending message:", err);
         alert("Something went wrong. Try again.");
     });
 };
