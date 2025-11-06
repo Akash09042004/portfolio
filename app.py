@@ -18,8 +18,8 @@ app.config.update(
     MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT=587,
     MAIL_USE_TLS=True,
-    MAIL_USERNAME=os.environ.get('akashnagarajan001@gmail.com'),  # Your Gmail
-    MAIL_PASSWORD=os.environ.get('kvdiisnuigpmssdc')   # Gmail App Password
+    MAIL_USERNAME=('akashnagarajan001@gmail.com'),  # Your Gmail
+    MAIL_PASSWORD=('kvdiisnuigpmssdc')   # Gmail App Password
 )
 
 mail = Mail(app)
@@ -35,6 +35,7 @@ def home():
 def contact():
     try:
         data = request.get_json()
+        print("Received data:", data)  # Debug
         name = data.get('name')
         email = data.get('email')
         message = data.get('message')
@@ -44,13 +45,15 @@ def contact():
 
         msg = Message(
             subject=f"New message from {name}",
-            sender=app.config['MAIL_USERNAME'],
-            recipients=[os.environ.get('MAIL_RECIPIENT', app.config['MAIL_USERNAME'])],
+            sender='akashnagarajan001@gmail.com',
+            recipients=['akashnagarajan001@gmail.com'],
             body=f"From: {name} <{email}>\n\n{message}"
         )
         mail.send(msg)
         return jsonify({"message": "Message sent successfully!"})
+
     except Exception as e:
+        print("Error:", e)  # Debug print
         return jsonify({"error": str(e)}), 500
 
 # -----------------------------
