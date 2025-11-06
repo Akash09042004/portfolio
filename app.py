@@ -8,7 +8,7 @@ app = Flask(__name__)
 # -----------------------------
 # CORS configuration
 # -----------------------------
-FRONTEND_URL = os.environ.get("FRONTEND_URL", "*")  # Set in Render environment
+FRONTEND_URL = os.environ.get("portfolio-sigma-ecru-rijposmiqw.vercel.app", "*")  # Set in Render environment
 CORS(app, origins=FRONTEND_URL)
 
 # -----------------------------
@@ -18,8 +18,8 @@ app.config.update(
     MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT=587,
     MAIL_USE_TLS=True,
-    MAIL_USERNAME=os.environ.get('MAIL_USERNAME'),  # Your Gmail
-    MAIL_PASSWORD=os.environ.get('MAIL_PASSWORD')   # Gmail App Password
+    MAIL_USERNAME=os.environ.get('akashnagarajan001@gmail.com'),  # Your Gmail
+    MAIL_PASSWORD=os.environ.get('kvdiisnuigpmssdc')   # Gmail App Password
 )
 
 mail = Mail(app)
