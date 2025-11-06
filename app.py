@@ -1,6 +1,8 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import sendgrid
+from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
 app = Flask(__name__)
@@ -36,3 +38,4 @@ def contact():
     except Exception as e:
         print("Error:", e)
         return jsonify({"error": str(e)}), 500
+
