@@ -468,3 +468,13 @@ body{
     transform: translateX(-50%) scale(1);
     top: -1.8rem;
 } 
+
+@media (min-width: 993px) {
+    .wrapper {
+        transform: none;
+    }
+
+    body {
+        overflow: hidden;
+    }
+}
