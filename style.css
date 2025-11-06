@@ -18,8 +18,8 @@
     --pages-color:linear-gradient(90deg, #fff, #ddd);
     --border: 0.125rem solid #00abf0;
     --box-shadow: 0 0 0.8rem rgba(0,0,0,0.2);
-
 }
+
 body{
     display: flex;
     justify-content: center;
@@ -310,7 +310,6 @@ body{
     flex-wrap: wrap;
     gap: 1.5rem;
     margin-top: 2rem;
-
 }
 .skills-box .skills-content{
     flex: 1 1 20rem;
@@ -348,7 +347,6 @@ body{
 /* portfolio */
 .portfolio-box{
     margin-top: 2rem;
-
 }
 .portfolio-box .img-box{
     display: flex;
@@ -476,5 +474,61 @@ body{
 
     body {
         overflow: hidden;
+    }
+}
+
+/* ================= MOBILE RESPONSIVE FIX ================= */
+@media (max-width: 992px) {
+    body {
+        overflow: auto; /* enable scrolling */
+        padding: 1rem;
+        flex-direction: column;
+    }
+    .wrapper {
+        width: 100%;
+        height: auto;
+        perspective: 100rem;
+        padding: 1rem;
+        flex-direction: column;
+    }
+    .book {
+        flex-direction: column;
+        position: relative;
+        height: auto;
+    }
+    .book-page {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 1rem;
+        margin-bottom: 1rem; /* separate pages */
+        box-shadow: none;
+    }
+    .cover {
+        width: 100%;
+        height: auto;
+        border-radius: .5rem;
+    }
+    .profile-page img {
+        max-width: 120px;
+    }
+    .profile-page h1 {
+        font-size: 2rem;
+    }
+    .profile-page h3 {
+        font-size: 1.2rem;
+    }
+    .skills-content .content span {
+        width: 4.5rem;
+        height: 4rem;
+        font-size: 0.9rem;
+    }
+    .portfolio-box .img-box {
+        height: 12rem;
+    }
+    /* Disable 3D flips on mobile */
+    .book-page.page-right,
+    .cover.cover-right {
+        transform: none !important;
     }
 }
