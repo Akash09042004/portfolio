@@ -1,18 +1,18 @@
 import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import sendgrid
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
 app = Flask(__name__)
 
+# Allow only your Vercel frontend
 FRONTEND_URL = "https://portfolio-sigma-ecru-rijposmiqw.vercel.app"
 CORS(app, origins=[FRONTEND_URL])
 
 @app.route('/')
 def home():
-    return jsonify({"message": "Backend running!"})
+    return jsonify({"message": "Backend running!"}), 200
 
 @app.route('/contact', methods=['POST'])
 def contact():
@@ -23,19 +23,29 @@ def contact():
         message = data.get('message')
 
         if not name or not email or not message:
-            return jsonify({"error": "All fields required"}), 400
+            return jsonify({"error": "All fields are required!"}), 400
 
-        sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
+        # Send email using SendGrid
+        sg = SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
         email_msg = Mail(
             from_email='akashnagarajan001@gmail.com',
             to_emails='akashnagarajan001@gmail.com',
-            subject=f'New message from {name}',
+            subject=f'📩 New message from {name}',
             plain_text_content=f"From: {name}\nEmail: {email}\n\nMessage:\n{message}"
         )
-        sg.send(email_msg)
-        return jsonify({"message": "Message sent successfully!"}), 200
+
+        response = sg.send(email_msg)
+        print("SendGrid Response:", response.status_code)
+
+        if response.status_code >= 200 and response.status_code < 300:
+            return jsonify({"message": "Message sent successfully!"}), 200
+        else:
+            return jsonify({"error": "Failed to send message via SendGrid"}), 500
 
     except Exception as e:
-        print("Error:", e)
+        print("Error:", str(e))
         return jsonify({"error": str(e)}), 500
 
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
