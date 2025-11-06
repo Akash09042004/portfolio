@@ -1,54 +1,38 @@
-# refreshed
 from flask import Flask, request, jsonify
-from flask_mail import Mail, Message
 from flask_cors import CORS
+import sendgrid
+from sendgrid.helpers.mail import Mail
 
 app = Flask(__name__)
 
 FRONTEND_URL = "https://portfolio-sigma-ecru-rijposmiqw.vercel.app"
 CORS(app, origins=[FRONTEND_URL])
 
-# ----------------------------
-# Flask-Mail Config
-# ----------------------------
-app.config.update(
-    MAIL_SERVER='smtp.gmail.com',
-    MAIL_PORT=587,
-    MAIL_USE_TLS=True,
-    MAIL_USERNAME='akashnagarajan001@gmail.com',
-    MAIL_PASSWORD='kvdiisnuigpmssdc'  # your app password
-)
+@app.route('/')
+def home():
+    return jsonify({"message": "Backend running!"})
 
-mail = Mail(app)
-
-@app.route('/contact', methods=['POST', 'OPTIONS'])
+@app.route('/contact', methods=['POST'])
 def contact():
-    if request.method == 'OPTIONS':
-        # Handle CORS preflight
-        return jsonify({'message': 'Preflight OK'}), 200
-
-    data = request.get_json()
-    name = data.get('name')
-    email = data.get('email')
-    message = data.get('message')
-
-    if not name or not email or not message:
-        return jsonify({'error': 'All fields required'}), 400
-
-    msg = Message(
-        subject=f"Portfolio Message from {name}",
-        sender='akashnagarajan001@gmail.com',
-        recipients=['akashnagarajan001@gmail.com'],
-        body=f"From: {name}\nEmail: {email}\n\nMessage:\n{message}"
-    )
-
     try:
-        mail.send(msg)
-        return jsonify({'message': 'Message sent successfully!'}), 200
+        data = request.get_json()
+        name = data.get('name')
+        email = data.get('email')
+        message = data.get('message')
+
+        if not name or not email or not message:
+            return jsonify({"error": "All fields required"}), 400
+
+        sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
+        email_msg = Mail(
+            from_email='akashnagarajan001@gmail.com',
+            to_emails='akashnagarajan001@gmail.com',
+            subject=f'New message from {name}',
+            plain_text_content=f"From: {name}\nEmail: {email}\n\nMessage:\n{message}"
+        )
+        sg.send(email_msg)
+        return jsonify({"message": "Message sent successfully!"}), 200
+
     except Exception as e:
-        print("Mail error:", e)
-        return jsonify({'error': 'Failed to send message'}), 500
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
+        print("Error:", e)
+        return jsonify({"error": str(e)}), 500
