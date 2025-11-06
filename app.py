@@ -4,61 +4,49 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
-# -----------------------------
-# CORS configuration
-# -----------------------------
-# Replace this with your frontend URL (Vercel)
 FRONTEND_URL = "https://portfolio-sigma-ecru-rijposmiqw.vercel.app"
 CORS(app, origins=[FRONTEND_URL])
 
-# -----------------------------
-# Mail configuration
-# -----------------------------
-# Gmail settings (use your email and App Password)
+# ----------------------------
+# Flask-Mail Config
+# ----------------------------
 app.config.update(
     MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT=587,
     MAIL_USE_TLS=True,
-    MAIL_USERNAME='akashnagarajan001@gmail.com',   # <-- Your Gmail
-    MAIL_PASSWORD='kvdiisnuigpmssdc'              # <-- Your Gmail App Password
+    MAIL_USERNAME='akashnagarajan001@gmail.com',
+    MAIL_PASSWORD='kvdiisnuigpmssdc'  # your app password
 )
 
 mail = Mail(app)
 
-# -----------------------------
-# Routes
-# -----------------------------
-@app.route('/')
-def home():
-    return jsonify({"message": "Flask backend is running!"})
-
-@app.route('/contact', methods=['POST'])
+@app.route('/contact', methods=['POST', 'OPTIONS'])
 def contact():
+    if request.method == 'OPTIONS':
+        # Handle CORS preflight
+        return jsonify({'message': 'Preflight OK'}), 200
+
+    data = request.get_json()
+    name = data.get('name')
+    email = data.get('email')
+    message = data.get('message')
+
+    if not name or not email or not message:
+        return jsonify({'error': 'All fields required'}), 400
+
+    msg = Message(
+        subject=f"Portfolio Message from {name}",
+        sender='akashnagarajan001@gmail.com',
+        recipients=['akashnagarajan001@gmail.com'],
+        body=f"From: {name}\nEmail: {email}\n\nMessage:\n{message}"
+    )
+
     try:
-        data = request.get_json()
-        name = data.get('name')
-        email = data.get('email')
-        message = data.get('message')
-
-        if not name or not email or not message:
-            return jsonify({"error": "All fields are required"}), 400
-
-        # Email content
-        msg = Message(
-            subject=f"New message from {name}",
-            sender=app.config['MAIL_USERNAME'],        # Use your email as sender
-            recipients=[app.config['MAIL_USERNAME']],  # Receive email at your address
-            body=f"From: {name} <{email}>\n\n{message}"
-        )
         mail.send(msg)
-        return jsonify({"message": "Message sent successfully!"})
-
+        return jsonify({'message': 'Message sent successfully!'}), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print("Mail error:", e)
+        return jsonify({'error': 'Failed to send message'}), 500
 
-# -----------------------------
-# Run Flask app
-# -----------------------------
 if __name__ == '__main__':
-    port = 5000
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(debug=True)
