@@ -8,7 +8,8 @@ app = Flask(__name__)
 # -----------------------------
 # CORS configuration
 # -----------------------------
-FRONTEND_URL = os.environ.get("portfolio-sigma-ecru-rijposmiqw.vercel.app/", "*")  # Set this on Render to your Netlify URL
+# Replace with your frontend URL
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "*")  # Set FRONTEND_URL in Render Environment
 CORS(app, origins=FRONTEND_URL)
 
 # -----------------------------
@@ -18,8 +19,8 @@ app.config.update(
     MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT=587,
     MAIL_USE_TLS=True,
-    MAIL_USERNAME=os.environ.get('akashnagarajan001@gmail.com'),  # Gmail address (set as env variable)
-    MAIL_PASSWORD=os.environ.get('kvdiisnuigpmssdc')   # Gmail App Password (set as env variable)
+    MAIL_USERNAME=os.environ.get('akashnagarajan001@gmail.com'),  # Set MAIL_USERNAME in Render Environment
+    MAIL_PASSWORD=os.environ.get('kvdiisnuigpmssdc')   # Set MAIL_PASSWORD in Render Environment
 )
 
 mail = Mail(app)
@@ -46,7 +47,7 @@ def contact():
         msg = Message(
             subject=f"New message from {name}",
             sender=app.config['MAIL_USERNAME'],
-            recipients=['akashnagarajan001@gmail.com'],  # Change/add recipients if needed
+            recipients=[os.environ.get('MAIL_RECIPIENT', app.config['MAIL_USERNAME'])],
             body=f"From: {name} <{email}>\n\n{message}"
         )
         mail.send(msg)
@@ -60,4 +61,4 @@ def contact():
 # -----------------------------
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=port)
