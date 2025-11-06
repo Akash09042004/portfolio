@@ -8,8 +8,7 @@ app = Flask(__name__)
 # -----------------------------
 # CORS configuration
 # -----------------------------
-# Replace with your frontend URL
-FRONTEND_URL = os.environ.get("FRONTEND_URL", "*")  # Set FRONTEND_URL in Render Environment
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "*")  # Set in Render environment
 CORS(app, origins=FRONTEND_URL)
 
 # -----------------------------
@@ -19,8 +18,8 @@ app.config.update(
     MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT=587,
     MAIL_USE_TLS=True,
-    MAIL_USERNAME=os.environ.get('akashnagarajan001@gmail.com'),  # Set MAIL_USERNAME in Render Environment
-    MAIL_PASSWORD=os.environ.get('kvdiisnuigpmssdc')   # Set MAIL_PASSWORD in Render Environment
+    MAIL_USERNAME=os.environ.get('MAIL_USERNAME'),  # Your Gmail
+    MAIL_PASSWORD=os.environ.get('MAIL_PASSWORD')   # Gmail App Password
 )
 
 mail = Mail(app)
@@ -43,7 +42,6 @@ def contact():
         if not name or not email or not message:
             return jsonify({"error": "All fields are required"}), 400
 
-        # Email content
         msg = Message(
             subject=f"New message from {name}",
             sender=app.config['MAIL_USERNAME'],
@@ -52,7 +50,6 @@ def contact():
         )
         mail.send(msg)
         return jsonify({"message": "Message sent successfully!"})
-
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
