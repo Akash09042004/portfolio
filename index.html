@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1144,7 +1145,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-  emailjs.init({ publicKey: "service_num5rz8" }); // <-- replace with your EmailJS public key
+  emailjs.init({ publicKey: "mqm1A8un3B97he47s" });
 
   // CUSTOM CURSOR
   const cursor = document.getElementById('cursor');
@@ -1237,7 +1238,7 @@
 
         // 2) Send the autoreply email back to the visitor via EmailJS
         try {
-          await emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+          await emailjs.send("service_num5rz8", "template_rxogw63", {
             name: data.get('name'),
             email: data.get('email')
           });
